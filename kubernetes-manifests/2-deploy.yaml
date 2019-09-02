@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubedemo-deployment
+  labels:
+    app: kubedemo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kubedemo
+  template:
+    metadata:
+      labels:
+        app: kubedemo
+    spec:
+      serviceAccountName: kubedemo    
+      containers:
+        - name: kubedemo
+          image: netyazilim/kubedemo:latest
+          ports:
+            - name: web
+              containerPort: 8080
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubedemo
+spec:
+  ports:
+    - protocol: TCP
+      nodePort: 30002
+      port: 8080
+      name: web
+  type: NodePort
+  selector:
+    app: kubedemo

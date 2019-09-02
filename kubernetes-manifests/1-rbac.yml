@@ -1,0 +1,32 @@
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kubedemo
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+      - list      
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kubedemo
+  namespace: default
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kubedemo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubedemo
+subjects:
+  - kind: ServiceAccount
+    name: kubedemo
+    namespace: default
